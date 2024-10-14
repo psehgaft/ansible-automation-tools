@@ -1,0 +1,14 @@
+---
+name: "Playbook SNMP automation"
+hosts: snmp_servers 
+inclue_vars:
+
+tasks:
+
+- name: ":::: NXOS tasks ::::"
+  include_role:
+    name: snmp
+  vars:
+    var1: 1
+
+  

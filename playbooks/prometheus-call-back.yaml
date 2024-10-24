@@ -9,4 +9,4 @@
         - localhost:9100
         - node.demo.do.prometheus.io
         labels:
-          env: demosite
+          env: "{{ env | default('dev') }}" # noqa: syntax-check

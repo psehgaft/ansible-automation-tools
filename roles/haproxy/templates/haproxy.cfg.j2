@@ -1,0 +1,47 @@
+
+global
+    log /dev/log    local0
+    log /dev/log    local1 notice
+    daemon
+    maxconn 3000
+
+defaults
+    log     global
+    mode    http
+    option  httplog
+    option  dontlognull
+    timeout connect 5s
+    timeout client  50s
+    timeout server  1m
+    timeout http-keep-alive 10s
+    timeout check 10s
+
+frontend rancher_apps
+    bind *:443
+    acl url_static path_beg -i /static /images /javascript /stylesheets
+    acl url_static path_end -i .jpg .gif .png .css .js
+    use_backend static if url_static
+    default_backend rancher_backend
+
+frontend rancher_console
+    bind *:6443
+    acl url_static path_beg -i /static /images /javascript /stylesheets
+    acl url_static path_end -i .jpg .gif .png .css .js
+    use_backend static if url_static
+    default_backend rancher_backend_console
+
+backend static
+    balance roundrobin
+    server static 127.0.0.1:4331 check
+
+backend rancher_backend
+    balance roundrobin
+{% for host in groups['masters'] %}
+    server {{ host }} {{ host }}:443 check
+{% endfor %}
+
+backend rancher_backend_console
+    balance roundrobin
+{% for host in groups['masters'] %}
+    server {{ host }} {{ host }}:6443 check
+{% endfor %}

@@ -1,2 +1,2 @@
----
-# vars file for freeipa
+freeipa_required_repos:
+  - epel-release

@@ -1,0 +1,23 @@
+---
+- name: Install required repositories
+  ansible.builtin.package:
+    name: "{{ freeipa_required_repos }}"
+    state: present
+
+- name: Install FreeIPA packages
+  ansible.builtin.package:
+    name: "{{ freeipa_packages }}"
+    state: present
+
+- name: Run FreeIPA server installation
+  ansible.builtin.command: >
+    ipa-server-install -U
+    --realm {{ freeipa_realm }}
+    --domain {{ freeipa_domain }}
+    --hostname {{ freeipa_hostname }}
+    --ds-password {{ freeipa_directory_manager_password }}
+    --admin-password {{ freeipa_admin_password }}
+    --setup-dns --no-forwarders
+  args:
+    creates: /etc/ipa/default.conf
+  notify: Restart FreeIPA

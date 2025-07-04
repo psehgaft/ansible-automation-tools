@@ -1,2 +1,9 @@
 ---
-# tasks file for freeipa
+- name: Include installation tasks
+  ansible.builtin.include_tasks: install.yml
+
+- name: Ensure FreeIPA is running
+  ansible.builtin.service:
+    name: ipa
+    state: started
+    enabled: true

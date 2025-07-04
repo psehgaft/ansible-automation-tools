@@ -1,2 +1,5 @@
 ---
-# handlers file for freeipa
+- name: Restart FreeIPA
+  ansible.builtin.service:
+    name: ipa
+    state: restarted

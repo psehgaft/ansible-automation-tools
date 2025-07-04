@@ -1,2 +1,7 @@
----
-# defaults file for freeipa
+freeipa_packages:
+  - ipa-server
+freeipa_realm: EXAMPLE.LOCAL
+freeipa_domain: example.local
+freeipa_hostname: ipa.example.local
+freeipa_admin_password: Secret123
+freeipa_directory_manager_password: Secret123

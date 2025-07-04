@@ -1,0 +1,9 @@
+---
+- name: Include installation steps
+  ansible.builtin.include_tasks: install.yml
+
+- name: Ensure keepalived is started and enabled
+  ansible.builtin.service:
+    name: "{{ keepalived_service }}"
+    state: started
+    enabled: true

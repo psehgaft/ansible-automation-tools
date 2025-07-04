@@ -1,0 +1,19 @@
+---
+- name: Install required repository packages
+  ansible.builtin.package:
+    name: "{{ keepalived_repo_packages }}"
+    state: present
+
+- name: Install Keepalived
+  ansible.builtin.package:
+    name: "{{ keepalived_package }}"
+    state: present
+
+- name: Deploy Keepalived configuration
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: "{{ keepalived_config_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart Keepalived

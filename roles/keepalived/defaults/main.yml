@@ -1,0 +1,7 @@
+keepalived_package: keepalived
+keepalived_service: keepalived
+keepalived_config_path: /etc/keepalived/keepalived.conf
+keepalived_interface: eth0
+keepalived_virtual_ip: 192.168.100.200
+keepalived_priority: 100
+keepalived_router_id: A

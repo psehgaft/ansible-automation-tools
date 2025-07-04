@@ -1,0 +1,19 @@
+---
+- name: Install required repository packages
+  ansible.builtin.package:
+    name: "{{ haproxy_repo_packages }}"
+    state: present
+
+- name: Install HAProxy
+  ansible.builtin.package:
+    name: "{{ haproxy_package }}"
+    state: present
+
+- name: Deploy HAProxy configuration
+  ansible.builtin.template:
+    src: haproxy.cfg.j2
+    dest: "{{ haproxy_config_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart HAProxy

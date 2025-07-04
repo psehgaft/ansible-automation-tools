@@ -1,2 +1,9 @@
 ---
-# tasks file for haproxy
+- name: Include installation steps
+  ansible.builtin.include_tasks: install.yml
+
+- name: Ensure haproxy is started and enabled
+  ansible.builtin.service:
+    name: "{{ haproxy_service }}"
+    state: started
+    enabled: true

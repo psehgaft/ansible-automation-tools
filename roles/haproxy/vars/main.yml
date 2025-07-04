@@ -1,2 +1,2 @@
----
-# vars file for haproxy
+haproxy_repo_packages:
+  - epel-release

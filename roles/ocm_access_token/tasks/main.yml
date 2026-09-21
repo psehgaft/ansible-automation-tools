@@ -1,0 +1,10 @@
+---
+- name: Validate required OCM service account inputs
+  ansible.builtin.import_tasks: assert.yml
+
+- name: Request OCM access token
+  ansible.builtin.import_tasks: request_token.yml
+
+- name: Validate generated OCM access token
+  ansible.builtin.import_tasks: validate.yml
+  when: ocm_validate_token | bool

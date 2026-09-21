@@ -1,0 +1,19 @@
+---
+- name: Validate OCM token against selected OCM API endpoint
+  ansible.builtin.uri:
+    url: "{{ ocm_api_url }}{{ ocm_validate_endpoint }}"
+    method: GET
+    headers:
+      Authorization: "Bearer {{ ocm_access_token }}"
+      Accept: "application/json"
+    return_content: true
+    status_code:
+      - 200
+  register: ocm_validation_response
+  no_log: "{{ ocm_no_log }}"
+
+- name: Expose OCM token validation metadata
+  ansible.builtin.set_fact:
+    ocm_token_validated: true
+    ocm_validation_status: "{{ ocm_validation_response.status }}"
+  no_log: "{{ ocm_no_log }}"

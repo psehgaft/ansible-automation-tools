@@ -1,0 +1,15 @@
+---
+galaxy_info:
+  role_name: ocm_access_token
+  namespace: openshift_automation
+  author: Heber Romero / OpenShift Automation
+  description: Generate a short-lived OCM access token from a Red Hat Hybrid Cloud Console service account.
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: EL
+      versions:
+        - "9"
+        - "8"
+
+dependencies: []

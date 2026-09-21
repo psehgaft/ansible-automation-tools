@@ -1,0 +1,36 @@
+---
+- name: Request short-lived OCM access token from Red Hat SSO
+  ansible.builtin.uri:
+    url: "{{ ocm_token_endpoint }}"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      grant_type: "client_credentials"
+      client_id: "{{ ocm_client_id }}"
+      client_secret: "{{ ocm_client_secret }}"
+      scope: "{{ ocm_scopes }}"
+    headers:
+      Accept: "application/json"
+    return_content: true
+    status_code: 200
+  register: ocm_token_response
+  no_log: "{{ ocm_no_log }}"
+
+- name: Assert token response contains access_token
+  ansible.builtin.assert:
+    that:
+      - ocm_token_response.json is defined
+      - ocm_token_response.json.access_token is defined
+      - ocm_token_response.json.access_token | length > 0
+    fail_msg: >-
+      Red Hat SSO did not return an access_token. Validate the service account
+      Client ID, Client Secret, scopes, and Red Hat User Access permissions.
+  no_log: "{{ ocm_no_log }}"
+
+- name: Expose OCM token facts for downstream tasks
+  ansible.builtin.set_fact:
+    ocm_access_token: "{{ ocm_token_response.json.access_token }}"
+    ocm_token_type: "{{ ocm_token_response.json.token_type | default('Bearer') }}"
+    ocm_expires_in: "{{ ocm_token_response.json.expires_in | default(900) }}"
+    ocm_token_generated_at: "{{ lookup('pipe', 'date -u +%Y-%m-%dT%H:%M:%SZ') }}"
+  no_log: "{{ ocm_no_log }}"

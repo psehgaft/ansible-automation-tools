@@ -1,0 +1,27 @@
+---
+# Red Hat SSO endpoint for Red Hat Hybrid Cloud Console / OCM API tokens.
+ocm_sso_host: "https://sso.redhat.com"
+
+# OAuth2 token endpoint used by Red Hat service accounts.
+ocm_token_endpoint: "{{ ocm_sso_host }}/auth/realms/redhat-external/protocol/openid-connect/token"
+
+# Red Hat documented scope for Hybrid Cloud Console service account usage.
+ocm_scopes: "openid api.iam.service_accounts"
+
+# OCM API Gateway.
+ocm_api_url: "https://api.openshift.com"
+
+# Optional validation after token generation.
+# Set to true only if the service account has permission for the selected endpoint.
+ocm_validate_token: false
+ocm_validate_endpoint: "/api/clusters_mgmt/v1/clusters"
+
+# Hide secrets and generated tokens from Ansible output.
+ocm_no_log: true
+
+# The role can read credentials from variables or from the environment.
+# Priority:
+# 1. Explicit Ansible vars: ocm_client_id / ocm_client_secret
+# 2. Environment vars: OCM_CLIENT_ID / OCM_CLIENT_SECRET
+ocm_client_id: "{{ lookup('env', 'OCM_CLIENT_ID') | default('', true) }}"
+ocm_client_secret: "{{ lookup('env', 'OCM_CLIENT_SECRET') | default('', true) }}"

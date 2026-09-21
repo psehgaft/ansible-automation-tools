@@ -1,0 +1,19 @@
+---
+- name: Assert OCM Client ID is defined
+  ansible.builtin.assert:
+    that:
+      - ocm_client_id is defined
+      - ocm_client_id | length > 0
+    fail_msg: >-
+      ocm_client_id is required. Set it as an Ansible variable or export
+      OCM_CLIENT_ID in the execution environment.
+
+- name: Assert OCM Client Secret is defined
+  ansible.builtin.assert:
+    that:
+      - ocm_client_secret is defined
+      - ocm_client_secret | length > 0
+    fail_msg: >-
+      ocm_client_secret is required. Set it as an Ansible variable, Ansible Vault,
+      AAP credential, or export OCM_CLIENT_SECRET in the execution environment.
+  no_log: "{{ ocm_no_log }}"

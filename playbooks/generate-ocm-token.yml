@@ -1,0 +1,39 @@
+---
+- name: Generate OCM access token from Red Hat Hybrid Cloud Console service account
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  roles:
+    - role: ocm_access_token
+      vars:
+        # Set true if the service account has permission to read the validation endpoint.
+        ocm_validate_token: false
+
+  post_tasks:
+    - name: Show non-sensitive token metadata
+      ansible.builtin.debug:
+        msg:
+          - "OCM token generated successfully."
+          - "Token type: {{ ocm_token_type }}"
+          - "Expires in seconds: {{ ocm_expires_in }}"
+          - "Generated at UTC: {{ ocm_token_generated_at }}"
+
+    - name: Example OCM API call using generated token
+      ansible.builtin.uri:
+        url: "{{ ocm_api_url }}/api/clusters_mgmt/v1/clusters"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ ocm_access_token }}"
+          Accept: "application/json"
+        return_content: true
+      register: ocm_clusters
+      no_log: "{{ ocm_no_log }}"
+      when: ocm_query_clusters | default(false) | bool
+
+    - name: Show cluster count from example query
+      ansible.builtin.debug:
+        msg: "OCM returned {{ ocm_clusters.json.items | default([]) | length }} clusters."
+      when:
+        - ocm_query_clusters | default(false) | bool
+        - ocm_clusters is defined
